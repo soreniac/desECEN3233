@@ -1,6 +1,9 @@
 ## 64 bit Data Encryption Standard written in SystemVerilog
-
-This was a lab for my digital logic design class at OSU. We were given a stub file and some basic context for Data Encryption Standard. 
+'''
+Soren Petersen &
+Kyle Bowser
+'''
+This was a lab for our digital logic design class at OSU. We were given a stub file and some basic context for Data Encryption Standard. 
 
 
 
@@ -66,7 +69,6 @@ endmodule // round1
 ```
 
 ### Waveform
-![Image description](waveform.png)
+![Image description](waveform.PNG)
 ### Des.out file
-desout.png
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+![img](desout.PNG)
