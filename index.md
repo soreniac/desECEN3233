@@ -1,37 +1,72 @@
-## Welcome to GitHub Pages
+## 64 bit Data Encryption Standard written in SystemVerilog
 
-You can use the [editor on GitHub](https://github.com/soreniac/desECEN3233/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+This was a lab for my digital logic design class at OSU. We were given a stub file and some basic context for Data Encryption Standard. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Major Code Blocks
+
+The feistel is one of the major operative blocks. Most of the rest are shifts or the runner module.
 
 ```markdown
-Syntax highlighted code block
+module feistel (inp_block, subkey, out_block);
 
-# Header 1
-## Header 2
-### Header 3
+   input logic [31:0]  inp_block;
+   input logic [47:0]  subkey;
+   output logic [31:0] out_block;
 
-- Bulleted
-- List
+   logic [31:0] sout;
+   logic [47:0] exp_out;
+   logic [47:0] int_block1;
 
-1. Numbered
-2. List
+   EF ef(inp_block, exp_out);
 
-**Bold** and _Italic_ and `Code` text
+   assign int_block1 = exp_out ^ subkey;
 
-[Link](url) and ![Image](src)
+   S1_Box s1(int_block1[47:42], sout[31:28]);
+   S2_Box s2(int_block1[41:36], sout[27:24]);
+   S3_Box s3(int_block1[35:30], sout[23:20]);
+   S4_Box s4(int_block1[29:24], sout[19:16]);
+   S5_Box s5(int_block1[23:18], sout[15:12]);
+   S6_Box s6(int_block1[17:12], sout[11:8]);
+   S7_Box s7(int_block1[11:6], sout[7:4]);
+   S8_Box s8(int_block1[5:0], sout[3:0]);
+   SF sf(sout, out_block);
+
+endmodule // Feistel
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+There is also the round module which has similar importance and in the main runner code is called the most. 
 
-### Jekyll Themes
+```markdown
+module round (inp_block, subkey, out_block);
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/soreniac/desECEN3233/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+    input logic [63:0] inp_block;
+	input logic [47:0] subkey;
+	output logic [63:0] out_block;
 
-### Support or Contact
+	logic [31:0] lb1, rb1, rb2;
 
+
+	assign lb1 = inp_block[63:32];
+	assign rb1 = inp_block[31:0];
+	
+
+	logic [31:0] lb2;
+	assign lb2 = rb1[31:0];
+
+	logic [31:0] permutefeistel;
+	feistel f(rb1, subkey, permutefeistel);
+
+	assign rb2 = lb1 ^ permutefeistel;
+
+	assign out_block = {lb2[31:0], rb2[31:0]};
+
+endmodule // round1
+```
+
+### Waveform
+<img src="/DES/Waveform.png" alt="Image">
+### Des.out file
+desout.png
 Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
